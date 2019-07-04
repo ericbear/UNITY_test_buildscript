@@ -1,0 +1,41 @@
+{
+  "name": "unity-buildscript",
+  "version": "1.0.0",
+  "description": "",
+  "configs": {
+    "unity": "WHERE IS YOUR Unity.app such as /Applications/Unity.app/Contents/MacOS/Unity",
+    "version": "APP VERSION",
+    "output_folder": "OUTPUT FOLDER",
+    "output_prefix": "OUTPUT FILE PREFIX",
+    "bundle_id": "APP BUNDLE ID",
+    "company": "COMPANY NAME",
+    "dev": {
+      "product_name": "PRODUCT NAME FOR DEV",
+      "define_symbols": "MACRO FOR DEV",
+      "android": {
+        "support_obb": false
+      }
+    },
+    "prod": {
+      "product_name": "PRODUCT NAME FOR PROD",
+      "define_symbols": "MACRO FOR PROD",
+      "android": {
+        "support_obb": false
+      }
+    },
+    "keystore_pass": "YOUR KEYSTORE PASSCODE",
+    "keyalias_name": "YOUR ALIAS FOR KEYSTORE",
+    "keyalias_pass": "YOUR ALIAS PASSCODE FOR KEYSTORE"
+  },
+  "scripts": {
+    "build-prepare": "curl \"https://raw.githubusercontent.com/ericbear/UNITY_test_buildscript/master/Assets/Scripts/Editor/BuildScript.cs\" > Assets/Scripts/Editor/BuildScript.cs; mkdir -p ${npm_package_configs_output_folder}; TIMESTAMP=$(date +\"%s\"); echo \"${TIMESTAMP}\" > TIMESTAMP; node -e \"const fs = require('fs'); const path = './Assets/Plugins/Android/AndroidManifest.xml'; fs.writeFileSync(path, fs.readFileSync(path, 'utf8').replace(/android:versionCode=\\\"[0-9]*\\\"/, 'android:versionCode=\\\"${TIMESTAMP}\\\"').replace(/android:versionName=\\\"[0-9\\.]*\\\"/, 'android:versionName=\\\"${npm_package_configs_version}\\\"'), 'utf8')\";",
+    "build-clean": "rm Assets/Scripts/Editor/BuildScript.*; rm build_*.log; rm -rf builds/; rm TIMESTAMP",
+    "build-android": "TIMESTAMP=$(cat TIMESTAMP); GIT_COMMIT=$(git rev-parse HEAD | cut -c1-7); ${npm_package_configs_unity} -projectPath ${PWD} -quit -batchmode -buildTarget android -executeMethod BuildScript.BuildAndroid -logFile \"build_${TIMESTAMP}.log\" -CustomArgs:\"exportDir=${PWD}/${npm_package_configs_output_folder}/${npm_package_configs_output_prefix}_${TIMESTAMP}_${npm_package_configs_version}_${npm_package_configs_dev_define_symbols}_${GIT_COMMIT}.apk;applicationIdentifier=${npm_package_configs_bundle_id};companyName=${npm_package_configs_company};productName=${npm_package_configs_dev_product_name};bundleVersion=${npm_package_configs_version};iOS.buildNumber=${npm_package_configs_version};Android.bundleVersionCode=${TIMESTAMP};Android.keystorePass=${npm_package_configs_keystore_pass};Android.keyaliasName=${npm_package_configs_keyalias_name};Android.keyaliasPass=${npm_package_configs_keyalias_pass};Android.useAPKExpansionFiles=${npm_package_configs_dev_android_support_obb};iOS.ScriptingDefineSymbols=${npm_package_configs_dev_define_symbols};Android.ScriptingDefineSymbols=${npm_package_configs_dev_define_symbols}\"",
+    "build-android-production": "TIMESTAMP=$(cat TIMESTAMP); GIT_COMMIT=$(git rev-parse HEAD | cut -c1-7); ${npm_package_configs_unity} -projectPath ${PWD} -quit -batchmode -buildTarget android -executeMethod BuildScript.BuildAndroid -logFile \"build_${TIMESTAMP}.log\" -CustomArgs:\"exportDir=${PWD}/${npm_package_configs_output_folder}/${npm_package_configs_output_prefix}_${TIMESTAMP}_${npm_package_configs_version}_${npm_package_configs_prod_define_symbols}_${GIT_COMMIT}.apk;applicationIdentifier=${npm_package_configs_bundle_id};companyName=${npm_package_configs_company};productName=${npm_package_configs_prod_product_name};bundleVersion=${npm_package_configs_version};iOS.buildNumber=${npm_package_configs_version};Android.bundleVersionCode=${TIMESTAMP};Android.keystorePass=${npm_package_configs_keystore_pass};Android.keyaliasName=${npm_package_configs_keyalias_name};Android.keyaliasPass=${npm_package_configs_keyalias_pass};Android.useAPKExpansionFiles=${npm_package_configs_prod_android_support_obb};iOS.ScriptingDefineSymbols=${npm_package_configs_prod_define_symbols};Android.ScriptingDefineSymbols=${npm_package_configs_prod_define_symbols}\"",
+    "build-ios": "TIMESTAMP=$(cat TIMESTAMP); GIT_COMMIT=$(git rev-parse HEAD | cut -c1-7); ${npm_package_configs_unity} -projectPath ${PWD} -quit -batchmode -buildTarget ios -executeMethod BuildScript.BuildIOS -logFile \"build_${TIMESTAMP}.log\" -CustomArgs:\"exportDir=${PWD}/${npm_package_configs_output_folder}/${npm_package_configs_output_prefix}_${TIMESTAMP}_${npm_package_configs_version}_${npm_package_configs_dev_define_symbols}_${GIT_COMMIT}.apk;applicationIdentifier=${npm_package_configs_bundle_id};companyName=${npm_package_configs_company};productName=${npm_package_configs_dev_product_name};bundleVersion=${npm_package_configs_version};iOS.buildNumber=${npm_package_configs_version};Android.bundleVersionCode=${TIMESTAMP};Android.keystorePass=${npm_package_configs_keystore_pass};Android.keyaliasName=${npm_package_configs_keyalias_name};Android.keyaliasPass=${npm_package_configs_keyalias_pass};Android.useAPKExpansionFiles=${npm_package_configs_dev_android_support_obb};iOS.ScriptingDefineSymbols=${npm_package_configs_dev_define_symbols};Android.ScriptingDefineSymbols=${npm_package_configs_dev_define_symbols}\"",
+    "build-ios-production": "TIMESTAMP=$(cat TIMESTAMP); GIT_COMMIT=$(git rev-parse HEAD | cut -c1-7); ${npm_package_configs_unity} -projectPath ${PWD} -quit -batchmode -buildTarget ios -executeMethod BuildScript.BuildIOS -logFile \"build_${TIMESTAMP}.log\" -CustomArgs:\"exportDir=${PWD}/${npm_package_configs_output_folder}/${npm_package_configs_output_prefix}_${TIMESTAMP}_${npm_package_configs_version}_${npm_package_configs_prod_define_symbols}_${GIT_COMMIT}.apk;applicationIdentifier=${npm_package_configs_bundle_id};companyName=${npm_package_configs_company};productName=${npm_package_configs_prod_product_name};bundleVersion=${npm_package_configs_version};iOS.buildNumber=${npm_package_configs_version};Android.bundleVersionCode=${TIMESTAMP};Android.keystorePass=${npm_package_configs_keystore_pass};Android.keyaliasName=${npm_package_configs_keyalias_name};Android.keyaliasPass=${npm_package_configs_keyalias_pass};Android.useAPKExpansionFiles=${npm_package_configs_prod_android_support_obb};iOS.ScriptingDefineSymbols=${npm_package_configs_prod_define_symbols};Android.ScriptingDefineSymbols=${npm_package_configs_prod_define_symbols}\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
